@@ -2,7 +2,7 @@
 <html>
 <body style="margin:0;background:black;overflow:hidden">
 
-<video id="video" autoplay muted playsinline style="width:100vw;height:100vh;object-fit:contain;display:none"></video>
+<video id="video" muted autoplay playsinline style="width:100vw;height:100vh;object-fit:contain;display:none"></video>
 <img id="img" style="width:100vw;height:100vh;object-fit:contain;display:none"/>
 
 <script>
@@ -11,15 +11,19 @@ let list=[];
 let i=0;
 
 async function getFiles(){
- const r=await fetch("https://script.google.com/macros/s/AKfycbxLvj2bscSC-87j5qasJsVUjbU-wow3oUyRRr47WcNjW2vu_vQDH5bl-2YYgjMFuD-Khw/exec");
- list = await r.json();
+ try{
+   const r=await fetch("https://script.google.com/macros/s/AKfycbxLvj2bscSC-87j5qasJsVUjbU-wow3oUyRRr47WcNjW2vu_vQDH5bl-2YYgjMFuD-Khw/exec");
+   list = await r.json();
 
- if(list.length===0){
-   document.body.innerHTML="<h1 style='color:white;text-align:center'>No Media Found</h1>";
-   return;
+   if(!list.length){
+     document.body.innerHTML="<h1 style='color:white;text-align:center'>No Files</h1>";
+     return;
+   }
+
+   play();
+ }catch(e){
+   document.body.innerHTML="<h1 style='color:white'>Error Loading Playlist</h1>";
  }
-
- play();
 }
 
 function play(){
@@ -36,7 +40,10 @@ function play(){
    video.load();
    video.style.display="block";
 
+   video.play().catch(()=>next());
+
    video.onended=next;
+   video.onerror=next;
 
  }else{
    img.src=f.url;
