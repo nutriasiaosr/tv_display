@@ -1,66 +1,43 @@
 <!DOCTYPE html>
 <html>
-<body style="margin:0;background:black;overflow:hidden">
+<body style="margin:0;background:black">
 
-<video id="video" muted autoplay playsinline style="width:100vw;height:100vh;object-fit:contain;display:none"></video>
-<img id="img" style="width:100vw;height:100vh;object-fit:contain;display:none"/>
+<video id="v" muted playsinline style="width:100vw;height:100vh;object-fit:contain"></video>
 
 <script>
 
-let list=[];
-let i=0;
+let list=[]
+let i=0
 
-async function getFiles(){
- try{
-   const r=await fetch("https://script.google.com/macros/s/AKfycbxLvj2bscSC-87j5qasJsVUjbU-wow3oUyRRr47WcNjW2vu_vQDH5bl-2YYgjMFuD-Khw/exec");
-   list = await r.json();
+async function init(){
 
-   if(!list.length){
-     document.body.innerHTML="<h1 style='color:white;text-align:center'>No Files</h1>";
-     return;
-   }
+const r = await fetch("https://script.google.com/macros/s/AKfycbxLvj2bscSC-87j5qasJsVUjbU-wow3oUyRRr47WcNjW2vu_vQDH5bl-2YYgjMFuD-Khw/exec")
+list = await r.json()
 
-   play();
- }catch(e){
-   document.body.innerHTML="<h1 style='color:white'>Error Loading Playlist</h1>";
- }
+play()
+
 }
 
 function play(){
 
- let f=list[i];
- let video=document.getElementById("video");
- let img=document.getElementById("img");
+let f=list[i]
+let v=document.getElementById("v")
 
- video.style.display="none";
- img.style.display="none";
+v.src=f.url
+v.load()
 
- if(f.type.includes("video")){
-   video.src=f.url;
-   video.load();
-   video.style.display="block";
+v.play().catch(()=>{
+ setTimeout(()=>v.play(),500)
+})
 
-   video.play().catch(()=>next());
-
-   video.onended=next;
-   video.onerror=next;
-
- }else{
-   img.src=f.url;
-   img.style.display="block";
-
-   setTimeout(next,5000);
- }
+v.onended=()=>{
+ i=(i+1)%list.length
+ play()
 }
 
-function next(){
- i=(i+1)%list.length;
- play();
 }
 
-window.onload=getFiles;
-
-setInterval(()=>location.reload(),300000);
+window.onload=init
 
 </script>
 </body>
