@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<body style="margin:0;background:black">
+
+<video id="video" autoplay muted style="width:100%;height:100%;display:none"></video>
+<img id="img" style="width:100%;height:100%;object-fit:contain;display:none"/>
+
+<script>
+
+async function getFiles(){
+ const r=await fetch(
+   "https://script.google.com/macros/s/AKfycbxLvj2bscSC-87j5qasJsVUjbU-wow3oUyRRr47WcNjW2vu_vQDH5bl-2YYgjMFuD-Khw/exec"
+ );
+ return await r.json();
+}
+
+let list=[];
+let i=0;
+
+async function start(){
+ list=await getFiles();
+ play();
+}
+
+function play(){
+ let f=list[i];
+ let v=document.getElementById("video");
+ let img=document.getElementById("img");
+
+ v.style.display="none";
+ img.style.display="none";
+
+ if(f.type.includes("video")){
+  v.src=f.url;
+  v.style.display="block";
+  v.onended=next;
+ }else{
+  img.src=f.url;
+  img.style.display="block";
+  setTimeout(next,5000);
+ }
+}
+
+function next(){
+ i=(i+1)%list.length;
+ play();
+}
+
+start();
+setInterval(()=>location.reload(),300000);
+
+</script>
+</body>
+</html>
