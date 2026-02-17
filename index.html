@@ -2,7 +2,7 @@
 <html>
 <body style="margin:0;background:black">
 
-<video id="v" muted playsinline style="width:100vw;height:100vh;object-fit:contain"></video>
+<video id="v" muted autoplay playsinline style="width:100vw;height:100vh;object-fit:contain"></video>
 
 <script>
 
@@ -14,8 +14,12 @@ async function init(){
 const r = await fetch("https://script.google.com/macros/s/AKfycbwBlTTCgCAia_2t-nS1N5rHPL5CI_TcH52bNy7yXuqT5mj8_0AkG6rDBkqOvExDovaAbw/exec")
 list = await r.json()
 
-play()
+if(!list.length){
+ document.body.innerHTML="<h1 style='color:white;text-align:center'>No Media Found</h1>"
+ return
+}
 
+play()
 }
 
 function play(){
@@ -26,11 +30,14 @@ let v=document.getElementById("v")
 v.src=f.url
 v.load()
 
-v.play().catch(()=>{
- setTimeout(()=>v.play(),500)
-})
+v.play().catch(()=>setTimeout(()=>v.play(),500))
 
 v.onended=()=>{
+ i=(i+1)%list.length
+ play()
+}
+
+v.onerror=()=>{
  i=(i+1)%list.length
  play()
 }
