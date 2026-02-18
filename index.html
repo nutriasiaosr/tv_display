@@ -1,34 +1,85 @@
 <!DOCTYPE html>
 <html>
-<body style="margin:0;background:black">
+<head>
 
-<video id="v" autoplay muted playsinline style="width:100vw;height:100vh;object-fit:contain"></video>
+<!-- Auto refresh every hour (prevents freezes) -->
+<meta http-equiv="refresh" content="3600">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+background:black;
+overflow:hidden;
+}
+
+video{
+position:fixed;
+width:100vw;
+height:100vh;
+object-fit:contain;
+background:black;
+}
+</style>
+
+</head>
+<body>
+
+<video id="player" autoplay muted playsinline></video>
 
 <script>
 
+// ============================
+// PLAYLIST (ADD VIDEOS HERE)
+// ============================
+
 const playlist=[
+
 "https://drive.usercontent.google.com/download?id=1Lzc3tXU0k-w2auVVEPg2tBA82VJLNjl0&export=view",
+
+// Add more videos below like this:
+// "https://drive.usercontent.google.com/download?id=FILEID&export=view"
+
 ]
 
+// ============================
+// PLAYER LOGIC
+// ============================
+
 let i=0
-let v=document.getElementById("v")
+const video=document.getElementById("player")
 
-function play(){
+function playVideo(){
 
-v.src=playlist[i]
-v.load()
+if(!playlist.length){
+document.body.innerHTML="<h1 style='color:white;text-align:center'>No Videos</h1>"
+return
+}
 
-v.play().catch(()=>{})
+video.src=playlist[i]
+video.load()
 
-v.onended=()=>{
- i=(i+1)%playlist.length
- play()
+video.play().catch(()=>{
+setTimeout(()=>video.play(),500)
+})
+
+video.onended=()=>{
+i=(i+1)%playlist.length
+playVideo()
+}
+
+video.onerror=()=>{
+i=(i+1)%playlist.length
+playVideo()
 }
 
 }
 
-play()
+// start player
+playVideo()
 
 </script>
+
 </body>
 </html>
