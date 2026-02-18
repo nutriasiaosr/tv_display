@@ -1,85 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head>
+<body style="margin:0;background:black">
 
-<!-- Auto refresh every hour (prevents freezes) -->
-<meta http-equiv="refresh" content="3600">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body{
-margin:0;
-background:black;
-overflow:hidden;
-}
-
-video{
-position:fixed;
-width:100vw;
-height:100vh;
-object-fit:contain;
-background:black;
-}
-</style>
-
-</head>
-<body>
-
-<video id="player" autoplay muted playsinline></video>
-
-<script>
-
-// ============================
-// PLAYLIST (ADD VIDEOS HERE)
-// ============================
-
-const playlist=[
-
-"https://drive.google.com/uc?export=download&id=1Lzc3tXU0k-w2auVVEPg2tBA82VJLNjl0"
-
-// Add more videos below like this:
-// "https://drive.usercontent.google.com/download?id=FILEID&export=view"
-
-]
-
-// ============================
-// PLAYER LOGIC
-// ============================
-
-let i=0
-const video=document.getElementById("player")
-
-function playVideo(){
-
-if(!playlist.length){
-document.body.innerHTML="<h1 style='color:white;text-align:center'>No Videos</h1>"
-return
-}
-
-video.src=playlist[i]
-video.load()
-
-video.play().catch(()=>{
-setTimeout(()=>video.play(),500)
-})
-
-video.onended=()=>{
-i=(i+1)%playlist.length
-playVideo()
-}
-
-video.onerror=()=>{
-i=(i+1)%playlist.length
-playVideo()
-}
-
-}
-
-// start player
-playVideo()
-
-</script>
+<iframe
+src="https://drive.usercontent.google.com/download?id=1Lzc3tXU0k-w2auVVEPg2tBA82VJLNjl0&export=view"
+style="position:fixed;width:100vw;height:100vh;border:none"
+allow="autoplay">
+</iframe>
 
 </body>
 </html>
